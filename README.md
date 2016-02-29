@@ -7,7 +7,7 @@
 
 ### Example creation usage:
 
-`[https://tony-url-shortener.herokuapp.com/new/https://www.google.com](https://tony-url-shortener.herokuapp.com/new/https://www.google.com)`
+[https://tony-url-shortener.herokuapp.com/new/https://www.google.com]`(https://tony-url-shortener.herokuapp.com/new/https://www.google.com)`
 
 `[https://tony-url-shortener.herokuapp.com/new/http://freecodecamp.com/news](https://tony-url-shortener.herokuapp.com/new/http://freecodecamp.com/news)`
 
