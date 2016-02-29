@@ -1,21 +1,59 @@
 'use strict';
 
 var path = process.cwd()
-var parser = require("ua-parser-js")
-
+var URLs = require('machinepack-urls')
+var shortid = require('shortid')
+var UrlHandler = require(path + '/app/controllers/urlHandler.server.js')
 
 module.exports = function(app, passport) {
+	
+	var urlHandler = new UrlHandler()
 
-	app.route('/api/whoami')
+	app.route('/')
 		.get(function(req, res) {
-			// Create the User Agent object
-			var ua = {
-				ipaddress: req.headers['x-forwarded-for'],
-				language: req.headers['accept-language'],
-				os: parser(req.headers['user-agent']).os
-			}
+			res.sendFile(path + '/public/index.html')
+		})
+
+	app.route('/new/*?')
+		.get(function(req, res) {
+			// 1. I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
+			var url = req.params[0]
 			
-			// Send the UA object to the client
-			res.json(ua)
-		});
+			// Create random string
+			var id = shortid.generate()
+
+			// Shortened url
+			var shortenUrl = req.protocol + '://' + req.get('host') + '/' + id
+
+			// Object to be shown 
+			var result = {
+				original_url: null,
+				short_url: shortenUrl
+			}
+
+			// Determine whether the specified string is a valid, fully-qualified URL.
+			try {
+				URLs.validate({
+					string: url,
+				}).execSync()
+				
+				// Save the url to database
+				urlHandler.addUrl(id, url)
+				
+				// Response to client
+				result.original_url = url
+				res.json(result)
+
+			}
+			catch (err) {
+				if (err.exit === 'invalid') {
+					result.original_url = err.exit
+					return res.json(result)
+				}
+			}
+		})
+	
+	// 2. When I visit that shortened URL, it will redirect me to my original link.
+	app.route('/:id')
+		.get(urlHandler.redirect)
 }
