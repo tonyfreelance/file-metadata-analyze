@@ -18,11 +18,11 @@ If you want to pass a site that doesn't exist (or an invalid url) for some reaso
 
 ### Example creation output:
 
-`{ "original_url": "http://freecodecamp.com/news", "short_url": "https://tony-url-shortener.herokuapp.com/4" }`
+`{ "original_url": "http://freecodecamp.com/news", "short_url": "https://tony-url-shortener.herokuapp.com/V1P1qLTje" }`
 
 ### Usage:
 
-[https://tony-url-shortener.herokuapp.com/4](https://tony-url-shortener.herokuapp.com/4)
+[https://tony-url-shortener.herokuapp.com/V1P1qLTje](https://tony-url-shortener.herokuapp.com/V1P1qLTje)
 
 ### Will direct to:
 
