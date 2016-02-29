@@ -1,34 +1,21 @@
 'use strict';
 
-var path = process.cwd();
-var moment = require("moment")
+var path = process.cwd()
+var parser = require("ua-parser-js")
+
 
 module.exports = function(app, passport) {
 
-	app.route('/')
+	app.route('/api/whoami')
 		.get(function(req, res) {
-			res.sendFile(path + '/public/index.html');
-		});
-
-	app.route('/:timestamp')
-		.get(function(req, res) {
-			var timestamp = {
-				unix: null,
-				natural: null
+			// Create the User Agent object
+			var ua = {
+				ipaddress: req.headers['x-forwarded-for'],
+				language: req.headers['accept-language'],
+				os: parser(req.headers['user-agent']).os
 			}
-			var inputTime = req.params.timestamp
-			var time;
-			// If input is unix timestamp
-			if(moment.unix(inputTime).isValid()) {
-				timestamp.unix = JSON.parse(inputTime)
-				timestamp.natural = moment.unix(inputTime).format("MMMM DD, YYYY")
-			} 
-			// If input is natural human-readable date
-			else if(moment(inputTime).isValid()) {
-				timestamp.unix = moment(inputTime, "MMMM DD, YYYY").unix()
-				timestamp.natural = moment(inputTime).format("MMMM DD, YYYY")
-			} 
 			
-			res.json(timestamp)
-		})
+			// Send the UA object to the client
+			res.json(ua)
+		});
 }
