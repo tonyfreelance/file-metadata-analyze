@@ -30,6 +30,5 @@ module.exports = function(app, passport) {
 			} 
 			
 			res.json(timestamp)
-			
-		});
-};
+		})
+}
