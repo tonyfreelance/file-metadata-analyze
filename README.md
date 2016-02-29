@@ -22,8 +22,8 @@ If you want to pass a site that doesn't exist (or an invalid url) for some reaso
 
 ### Usage:
 
-`[https://tony-url-shortener.herokuapp.com/4](https://tony-url-shortener.herokuapp.com/4)`
+[https://tony-url-shortener.herokuapp.com/4](https://tony-url-shortener.herokuapp.com/4)
 
 ### Will direct to:
 
-`[http://freecodecamp.com/news](http://freecodecamp.com/news)`
+[http://freecodecamp.com/news](http://freecodecamp.com/news)
