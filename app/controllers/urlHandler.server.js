@@ -7,7 +7,7 @@ function UrlHandler() {
     this.addUrl = function(id, url) {
         Urls
             .findOneAndUpdate({
-                urlId: id
+                fullUrl: url
             }, {
                 urlId: id,
                 fullUrl: url

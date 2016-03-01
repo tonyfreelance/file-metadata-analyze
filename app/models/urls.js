@@ -3,12 +3,10 @@ var Schema = mongoose.Schema;
 
 var Url = new Schema({
     urlId: {
-      type: String,
-      unique: true
+      type: String
     },
     fullUrl: {
-        type: String,
-        unique: true
+        type: String
     }
 })
 

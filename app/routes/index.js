@@ -14,9 +14,9 @@ module.exports = function(app, passport) {
 			res.sendFile(path + '/public/index.html')
 		})
 
+	// 1. I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
 	app.route('/new/*?')
 		.get(function(req, res) {
-			// 1. I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
 			var url = req.params[0]
 			
 			// Create random string
