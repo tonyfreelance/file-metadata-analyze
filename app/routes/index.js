@@ -1,59 +1,59 @@
 'use strict';
 
 var path = process.cwd()
-var URLs = require('machinepack-urls')
-var shortid = require('shortid')
-var UrlHandler = require(path + '/app/controllers/urlHandler.server.js')
+var googleImages = require('google-images')
+var client = googleImages('009630864823783927675:sa4id2zghmk', 'AIzaSyDYZGBSd4Z1PG-8Ih34aQuH6y52ocUacBY')
+var SearchHandler = require("../controllers/searchHandler.server.js")
+var searchHandler = new SearchHandler()
 
 module.exports = function(app, passport) {
-	
-	var urlHandler = new UrlHandler()
 
+	app.set('views', path + '/app/views')
+	app.set('view engine', 'jade')
+
+	// Main view
 	app.route('/')
 		.get(function(req, res) {
-			res.sendFile(path + '/public/index.html')
+			res.render('index', {
+				title: 'Image Search Abstraction Layer'
+			})
 		})
 
-	// 1. I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
-	app.route('/new/*?')
+	// Handle the partial views
+	app.route('/partial/:name')
 		.get(function(req, res) {
-			var url = req.params[0]
-			
-			// Create random string
-			var id = shortid.generate()
+			var name = req.params.name
+			res.render('partials/' + name)
+		})
 
-			// Shortened url
-			var shortenUrl = req.protocol + '://' + req.get('host') + '/' + id
+	app.route('/search')
+		.get(function(req, res) {
+			// I can get the image URLs, alt text and page urls for a set of images relating to a given search string.
+			// I can get a list of the most recently submitted search strings.
+			if (req.query.search) {
+				client.search(req.query.search, {
+					page: req.query.offset
+				}).then(function(images) {
+					// Save to database
+					searchHandler.addSearchTerm(req.query.search)
 
-			// Object to be shown 
-			var result = {
-				original_url: null,
-				short_url: shortenUrl
+					// Response to client
+					res.json(images)
+				})
 			}
-
-			// Determine whether the specified string is a valid, fully-qualified URL.
-			try {
-				URLs.validate({
-					string: url,
-				}).execSync()
-				
-				// Save the url to database
-				urlHandler.addUrl(id, url)
-				
-				// Response to client
-				result.original_url = url
-				res.json(result)
-
-			}
-			catch (err) {
-				if (err.exit === 'invalid') {
-					result.original_url = err.exit
-					return res.json(result)
-				}
+			else {
+				// res.status(400).send({status:400, message: 'Please type in the search term!'})
+				res.redirect('/')
 			}
 		})
-	
-	// 2. When I visit that shortened URL, it will redirect me to my original link.
-	app.route('/:id')
-		.get(urlHandler.redirect)
+
+	// I can get a list of the most recently submitted search strings.
+	app.route('/history')
+		.get(searchHandler.showTerms)
+
+	// redirect all others to the index (HTML5 history)
+	app.route('*')
+		.get(function(req, res) {
+			res.redirect('/')
+		})
 }

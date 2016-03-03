@@ -1,0 +1,6 @@
+.jumbotron
+    h2.text-center Latest Searches
+    br
+    ol
+      li(ng-repeat="term in terms")
+        pre {{term | json}}

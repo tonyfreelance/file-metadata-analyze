@@ -1,0 +1,19 @@
+.jumbotron
+    h2.text-center Image Search Engine
+    br
+    h3 Please enter your search term below:
+    form#searchForm
+      .form-group
+        label(for='search') Search Image
+        input#search.form-control(type='text', placeholder='Search', ng-model='searchTerm' required="true")
+      button.btn.btn-success(type='submit' ng-click="getImages()") Search
+      button.btn.btn-default(type='submit' ng-click="getBack()" ng-disabled="!searchTerm.length") Back
+      button.btn.btn-default(type='submit' ng-click="getNext()" ng-disabled="!searchTerm.length") Next
+p {{fetchImageErr}}    
+ol
+  li(ng-repeat="image in images")
+    pre.text-center
+        a(href='{{image.url}}')
+          img.img-rounded.img-responsive.center-block(ng-src='{{image.thumbnail}}', alt='{{image.snippet}}')
+        a(href='{{image.context}}') {{image.snippet}}
+        
